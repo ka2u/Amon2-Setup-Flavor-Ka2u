@@ -180,7 +180,6 @@ any '/' => sub {
     <meta name="format-detection" content="telephone=no" />
     <link href="[% uri_for('/static/css/inuit/inuit.css') %]" rel="stylesheet" type="text/css" media="screen" />
     <link href="[% uri_for('/static/css/inuit/style.css') %]" rel="stylesheet" type="text/css" media="screen" />
-    <link href="[% uri_for('/static/css/main.css') %]" rel="stylesheet" type="text/css" media="screen" />
     <script src="[% uri_for('/static/js/<% $jquery_min_basename %>') %]"></script>
     <script src="[% uri_for('/static/js/spine.js') %]"></script>
 </head>
@@ -205,38 +204,36 @@ any '/' => sub {
     $self->write_file_raw('htdocs/static/css/inuit/inuit.css', Amon2::Setup::Asset::Inuit->inuit_css());
     $self->write_file_raw('htdocs/static/css/inuit/style.css', Amon2::Setup::Asset::Inuit->style_css());
 
-    $self->write_file('htdocs/static/css/main.css', <<'...');
-
-html {
-    color: #3d3d3d;
-    backgroundcolor: #ffffff;
-	background:-moz-linear-gradient(-90deg,#ffffff,#ffffff) fixed;
-	background:-webkit-gradient(linear,left top,left bottom,from(#ffffff),to(#ffffff)) fixed;
-}
-header {
-    height: 50px;
-    font-size: 36px;
-    padding: 2px;
-    text-align: center; }
-    header a {
-        color: black;
-        font-weight: bold;
-        text-decoration: none; }
-
-footer {
-    text-align: right;
-    padding-right: 10px;
-    padding-top: 2px; }
-    footer a {
-        text-decoration: none;
-        color: black;
-        font-weight: bold;
-    }
-
-/* smart phones */
-@media screen and (max-device-width: 480px) {
-}
-...
+#    $self->write_file('htdocs/static/css/main.css', <<'...');
+#
+#html {
+#    color: #3d3d3d;
+#    backgroundcolor: #ffffff;
+#	background:-moz-linear-gradient(-90deg,#ffffff,#ffffff) fixed;
+#	background:-webkit-gradient(linear,left top,left bottom,from(#ffffff),to(#ffffff)) fixed;
+#}
+#header {
+#    height: 50px;
+#    font-size: 36px;
+#    padding: 2px; }
+#    header a {
+#        color: black;
+#        font-weight: bold;
+#        text-decoration: none; }
+#
+#footer {
+#    padding-right: 10px;
+#    padding-top: 2px; }
+#    footer a {
+#        text-decoration: none;
+#        color: black;
+#        font-weight: bold;
+#    }
+#
+#/* smart phones */
+#@media screen and (max-device-width: 480px) {
+#}
+#...
 
     $self->write_file("t/00_compile.t", <<'...');
 use strict;

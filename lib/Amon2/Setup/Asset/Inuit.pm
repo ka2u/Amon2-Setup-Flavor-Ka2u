@@ -1093,10 +1093,12 @@ q{/*------------------------------------*\
 \*------------------------------------*/
 html{
 	font-family:"Helvetica Neue", Arial, sans-serif;
-	color:#e4eef6;
+    color: #3d3d3d;
+/*	color:#e4eef6;
 	background:#4a8ec2;
 	background:-moz-linear-gradient(-90deg,#5998c7,#4a8ec2) fixed;
 	background:-webkit-gradient(linear,left top,left bottom,from(#5998c7),to(#4a8ec2)) fixed;
+*/
 }
 body{
 	background:none;
@@ -1108,7 +1110,10 @@ body{
 	float:none;
 	text-align:center;
 }
-
+header {
+}
+footer {
+}
 
 
 
