@@ -16,6 +16,7 @@ sub run {
     $self->mkpath('htdocs/static/img/');
     $self->mkpath('htdocs/static/js/');
     $self->mkpath('log/');
+    $self->mkpath('db/');
 
     $self->write_file('lib/<<PATH>>.pm', <<'...');
 package <% $module %>;
@@ -200,7 +201,10 @@ table {
 ...
 
     $self->write_file("sql/my.sql", '');
-    $self->write_file("sql/sqlite3.sql", '');
+    $self->write_file("sql/sqlite3.sql", <<'...');
+CREATE TABLE table (id INTEGER PRIMARY KEY ASC, );
+INSERT INTO table () VALUES ();
+...
 
     $self->write_file('tmpl/index.tt', <<'...');
 [% WRAPPER 'include/layout.tt' %]
