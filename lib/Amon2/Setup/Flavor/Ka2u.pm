@@ -15,6 +15,7 @@ sub run {
 
     $self->mkpath('htdocs/static/img/');
     $self->mkpath('htdocs/static/js/');
+    $self->mkpath('log/');
 
     $self->write_file('lib/<<PATH>>.pm', <<'...');
 package <% $module %>;
@@ -24,8 +25,29 @@ use parent qw/Amon2/;
 our $VERSION='0.01';
 use 5.008001;
 
+use <% $module %>::DB;
+use Log::Dispatch;
+
 # __PACKAGE__->load_plugin(qw/DBI/);
 
+sub db {
+    my $self = shift;
+    $self->{db} //= do {
+        my $conf = $self->config->{teng} or die "missing db connection";
+        <% $module %>::DB->new($conf);
+    };
+}
+
+sub log {
+    my $self = shift;
+    $self->{log} //= do {
+        Log::Dispatch->new(
+            outputs => [
+                ['File', min_level => 'debug', filename => 'log/development.log'],
+            ],
+        );
+    };
+}
 1;
 ...
 
@@ -113,42 +135,67 @@ any '/' => sub {
 1;
 ...
 
+    $self->write_file("lib/<<PATH>>/DB.pm", <<'...');
+package <% $module %>::DB;
+use strict;
+use warnings;
+use parent 'Teng';
+1;
+...
+
+    $self->write_file("lib/<<PATH>>/DB/Schema.pm", <<'...');
+package <% $module %>::DB::Schema;
+use Teng::Schema::Declare;
+table {
+    name '';
+    pk '';
+    columns qw();
+};
+1;
+...
+
     $self->write_file("config/development.pl", <<'...');
 +{
-    'DBI' => [
-        'dbi:SQLite:dbname=development.db',
-        '',
-        '',
-        +{
-            sqlite_unicode => 1,
-        }
-    ],
+    teng => +{ 
+        'connect_info' => [
+            'dbi:SQLite:dbname=development.db',
+            '',
+            '',
+            +{
+                sqlite_unicode => 1,
+            }
+        ],
+    }
 };
 ...
 
-    $self->write_file("config/deployment.pl", <<'...');
+    $self->write_file("config/production.pl", <<'...');
 +{
-    'DBI' => [
-        'dbi:SQLite:dbname=deployment.db',
-        '',
-        '',
-        +{
-            sqlite_unicode => 1,
-        }
-    ],
+    teng => +{ 
+        'connect_info' => [
+            'dbi:SQLite:dbname=production.db',
+            '',
+            '',
+            +{
+                sqlite_unicode => 1,
+            }
+        ],
+    }
 };
 ...
 
     $self->write_file("config/test.pl", <<'...');
 +{
-    'DBI' => [
-        'dbi:SQLite:dbname=test.db',
-        '',
-        '',
-        +{
-            sqlite_unicode => 1,
-        }
-    ],
+    teng => +{ 
+        'connect_info' => [
+            'dbi:SQLite:dbname=test.db',
+            '',
+            '',
+            +{
+                sqlite_unicode => 1,
+            }
+        ],
+    }
 };
 ...
 
