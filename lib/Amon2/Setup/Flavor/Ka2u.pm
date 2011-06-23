@@ -7,6 +7,8 @@ our $VERSION = '0.01';
 use parent qw(Amon2::Setup::Flavor::Minimum);
 use Amon2::Setup::Asset::Spine;
 use Amon2::Setup::Asset::Inuit;
+use File::Copy;
+use Data::Dumper;
 
 sub run {
     my $self = shift;
@@ -229,10 +231,10 @@ INSERT INTO table () VALUES ();
     <meta http-equiv="Content-Script-Type" content="text/javascript" />  
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0"]]>
     <meta name="format-detection" content="telephone=no" />
-    <link href="[% uri_for('/static/css/inuit/inuit.css') %]" rel="stylesheet" type="text/css" media="screen" />
-    <link href="[% uri_for('/static/css/inuit/style.css') %]" rel="stylesheet" type="text/css" media="screen" />
+    <link href="[% uri_for('/static/inuit/inuit.css') %]" rel="stylesheet" type="text/css" media="screen" />
+    <link href="[% uri_for('/static/inuit/style.css') %]" rel="stylesheet" type="text/css" media="screen" />
     <script src="[% uri_for('/static/js/<% $jquery_min_basename %>') %]"></script>
-    <script src="[% uri_for('/static/js/spine.js') %]"></script>
+    <script src="[% uri_for('/static/spine/spine.js') %]"></script>
 </head>
 <body[% IF bodyID %] class="[% bodyID %]"[% END %]>
     <div class="container">
@@ -251,9 +253,8 @@ INSERT INTO table () VALUES ();
 ...
 
     $self->write_file('htdocs/static/js/' . Amon2::Setup::Asset::jQuery->jquery_min_basename(), Amon2::Setup::Asset::jQuery->jquery_min_content());
-    $self->write_file_raw('htdocs/static/js/spine.js', Amon2::Setup::Asset::Spine->spine());
-    $self->write_file_raw('htdocs/static/css/inuit/inuit.css', Amon2::Setup::Asset::Inuit->inuit_css());
-    $self->write_file_raw('htdocs/static/css/inuit/style.css', Amon2::Setup::Asset::Inuit->style_css());
+    $self->_cp(Amon2::Setup::Asset::Spine->spine_path, 'htdocs/static/');
+    $self->_cp(Amon2::Setup::Asset::Inuit->inuit_path, 'htdocs/static/');
 
 #    $self->write_file('htdocs/static/css/main.css', <<'...');
 #
@@ -327,6 +328,12 @@ nytprof/
 development.db
 test.db
 ...
+}
+
+sub _cp {
+    my ($self, $from, $to) = @_;
+    system("cp -Rp $from $to") == 0
+        or die "external cp command status was $?";
 }
 
 1;

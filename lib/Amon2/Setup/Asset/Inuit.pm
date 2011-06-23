@@ -2,19 +2,12 @@ package Amon2::Setup::Asset::Inuit;
 use strict;
 use warnings;
 use 5.008001;
-use File::Slurp;
 use File::Spec::Functions;
 
-my ($vol, $dir, $file) = File::Spec->splitpath($INC{"Amon2/Setup/Asset/Spine.pm"});
+my ($vol, $dir, $file) = File::Spec->splitpath($INC{"Amon2/Setup/Asset/Inuit.pm"});
 
-sub inuit_css {
-    my $text = read_file(catdir($dir, "inuit", "inuit.css"));
-    return $text;
-}
-
-sub style_css {
-    my $text = read_file(catdir($dir, "inuit", "style.css"));
-    return $text;
+sub inuit_path {
+    return catdir($dir, "inuit");
 }
 
 
